@@ -8,12 +8,36 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/RedrockExamUtils" />
+            <option value="$PROJECT_DIR$/RedrockExamUtils/database" />
+            <option value="$PROJECT_DIR$/RedrockExamUtils/file" />
+            <option value="$PROJECT_DIR$/RedrockExamUtils/humanunit" />
+            <option value="$PROJECT_DIR$/RedrockExamUtils/imageprovider" />
+            <option value="$PROJECT_DIR$/RedrockExamUtils/network" />
+            <option value="$PROJECT_DIR$/RedrockExamUtils/notification" />
+            <option value="$PROJECT_DIR$/RedrockExamUtils/permission" />
+            <option value="$PROJECT_DIR$/RedrockExamUtils/recyclerview" />
+            <option value="$PROJECT_DIR$/RedrockExamUtils/reflect" />
+            <option value="$PROJECT_DIR$/RedrockExamUtils/util" />
+            <option value="$PROJECT_DIR$/RedrockExamUtils/widget" />
             <option value="$PROJECT_DIR$/app" />
           </set>
         </option>
         <option name="myModules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/RedrockExamUtils" />
+            <option value="$PROJECT_DIR$/RedrockExamUtils/database" />
+            <option value="$PROJECT_DIR$/RedrockExamUtils/file" />
+            <option value="$PROJECT_DIR$/RedrockExamUtils/humanunit" />
+            <option value="$PROJECT_DIR$/RedrockExamUtils/imageprovider" />
+            <option value="$PROJECT_DIR$/RedrockExamUtils/network" />
+            <option value="$PROJECT_DIR$/RedrockExamUtils/notification" />
+            <option value="$PROJECT_DIR$/RedrockExamUtils/permission" />
+            <option value="$PROJECT_DIR$/RedrockExamUtils/recyclerview" />
+            <option value="$PROJECT_DIR$/RedrockExamUtils/reflect" />
+            <option value="$PROJECT_DIR$/RedrockExamUtils/util" />
+            <option value="$PROJECT_DIR$/RedrockExamUtils/widget" />
             <option value="$PROJECT_DIR$/app" />
           </set>
         </option>

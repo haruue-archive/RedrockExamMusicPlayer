@@ -1,0 +1,3 @@
+[submodule "RedrockExamUtils"]
+	path = RedrockExamUtils
+	url = git@github.com:haruue/RedrockExamUtils.git

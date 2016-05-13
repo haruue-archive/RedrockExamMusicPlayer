@@ -3,7 +3,19 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/RedrockExamMusicPlayer.iml" filepath="$PROJECT_DIR$/RedrockExamMusicPlayer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RedrockExamUtils/RedrockExamUtils.iml" filepath="$PROJECT_DIR$/RedrockExamUtils/RedrockExamUtils.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RedrockExamUtils/database/database.iml" filepath="$PROJECT_DIR$/RedrockExamUtils/database/database.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RedrockExamUtils/file/file.iml" filepath="$PROJECT_DIR$/RedrockExamUtils/file/file.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RedrockExamUtils/humanunit/humanunit.iml" filepath="$PROJECT_DIR$/RedrockExamUtils/humanunit/humanunit.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RedrockExamUtils/imageprovider/imageprovider.iml" filepath="$PROJECT_DIR$/RedrockExamUtils/imageprovider/imageprovider.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RedrockExamUtils/network/network.iml" filepath="$PROJECT_DIR$/RedrockExamUtils/network/network.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RedrockExamUtils/notification/notification.iml" filepath="$PROJECT_DIR$/RedrockExamUtils/notification/notification.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RedrockExamUtils/permission/permission.iml" filepath="$PROJECT_DIR$/RedrockExamUtils/permission/permission.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RedrockExamUtils/recyclerview/recyclerview.iml" filepath="$PROJECT_DIR$/RedrockExamUtils/recyclerview/recyclerview.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RedrockExamUtils/reflect/reflect.iml" filepath="$PROJECT_DIR$/RedrockExamUtils/reflect/reflect.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RedrockExamUtils/util/util.iml" filepath="$PROJECT_DIR$/RedrockExamUtils/util/util.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RedrockExamUtils/widget/widget.iml" filepath="$PROJECT_DIR$/RedrockExamUtils/widget/widget.iml" />
     </modules>
   </component>
 </project>

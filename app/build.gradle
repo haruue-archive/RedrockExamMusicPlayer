@@ -19,8 +19,27 @@ android {
     }
 }
 
+repositories {
+    maven {
+        url 'https://dl.bintray.com/haruue/maven/'
+    }
+}
+
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.3.0'
+    compile 'cn.com.caoyue.util:imageloader:0.9.9-experiment'
+    compile 'cn.com.caoyue.util:time:1.2.1'
+    compile project(':RedrockExamUtils:database')
+    compile project(':RedrockExamUtils:file')
+    compile project(':RedrockExamUtils:humanunit')
+    compile project(':RedrockExamUtils:imageprovider')
+    compile project(':RedrockExamUtils:network')
+    compile project(':RedrockExamUtils:notification')
+    compile project(':RedrockExamUtils:permission')
+    compile project(':RedrockExamUtils:recyclerview')
+    compile project(':RedrockExamUtils:reflect')
+    compile project(':RedrockExamUtils:util')
+    compile project(':RedrockExamUtils:widget')
 }
