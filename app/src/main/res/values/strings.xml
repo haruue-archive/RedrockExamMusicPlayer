@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">Redrock Exam Music Player</string>
+    <string name="app_name">音乐播放器</string>
+    <string name="local_music">本地音乐</string>
+    <string name="search">搜索</string>
+    <string name="hot_list">热门榜</string>
+    <string name="play_list">播放列表</string>
+    <string name="exit">退出</string>
+    <string name="empty">这里空空如也</string>
+    <string name="load_error">加载错误，请重试</string>
+    <string name="network_error">无法连接到网络</string>
+    <string name="json_decode_exception">服务器返回无法解析的数据，请稍后再试</string>
 </resources>

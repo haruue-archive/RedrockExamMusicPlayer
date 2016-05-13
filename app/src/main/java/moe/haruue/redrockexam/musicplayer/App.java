@@ -39,7 +39,8 @@ public class App extends HaruueApplication {
                         "albumpic_big TEXT," +
                         "albumpic_small TEXT," +
                         "m4a TEXT," +
-                        "downUrl TEXT)";
+                        "downUrl TEXT," +
+                        "file TEXT)";
                 db.execSQL(createSql);
             }
 
