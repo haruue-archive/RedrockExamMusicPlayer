@@ -1,10 +1,12 @@
 package moe.haruue.redrockexam.musicplayer;
 
-import android.database.sqlite.SQLiteDatabase;
-
+import cn.com.caoyue.imageloader.ImageLoaderConfig;
+import moe.haruue.redrockexam.musicplayer.data.database.info.LyricDatabaseInfo;
+import moe.haruue.redrockexam.musicplayer.data.database.info.MusicDatabaseInfo;
+import moe.haruue.redrockexam.musicplayer.data.storage.CurrentPlay;
+import moe.haruue.redrockexam.util.InstanceSaver;
 import moe.haruue.redrockexam.util.StandardUtils;
 import moe.haruue.redrockexam.util.abstracts.HaruueApplication;
-import moe.haruue.redrockexam.util.database.DatabaseInfo;
 import moe.haruue.redrockexam.util.database.DatabaseUtils;
 import moe.haruue.redrockexam.util.file.FileUtils;
 import moe.haruue.redrockexam.util.network.NetworkConfiguration;
@@ -24,30 +26,16 @@ public class App extends HaruueApplication {
         FileUtils.initialize(this);
         // Initialize NetWorkUtils
         NetworkUtils.initialize(this, new NetworkConfiguration().setConnectTimeout(60).setReadTimeout(9999).setRequestMethod(NetworkConfiguration.RequestMethods.POST));
+        // Initialize ImageLoader
+        ImageLoaderConfig.start(this)
+                .setDefaultDrawableOnLoading(R.drawable.ic_music_note_black_24dp)
+                .setDefaultDrawableOnFailure(R.drawable.ic_music_note_black_24dp)
+                .build();
         // Initialize Database
         DatabaseUtils.initialize(this);
-        new DatabaseUtils("music", 1, new DatabaseInfo() {
-            @Override
-            public void onCreate(SQLiteDatabase db) {
-                String createSql = "CREATE TABLE music (" +
-                        "songid INT PRIMARY KEY NOT NULL," +
-                        "songname TEXT NOT NULL," +
-                        "singerid INT," +
-                        "singername TEXT," +
-                        "albumid INT," +
-                        "albumname TEXT," +
-                        "albumpic_big TEXT," +
-                        "albumpic_small TEXT," +
-                        "m4a TEXT," +
-                        "downUrl TEXT," +
-                        "file TEXT)";
-                db.execSQL(createSql);
-            }
-
-            @Override
-            public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-            }
-        });
+        new DatabaseUtils("music", 1, new MusicDatabaseInfo());
+        new DatabaseUtils("lyric", 1, new LyricDatabaseInfo());
+        // Initialize InstanceSaver
+        InstanceSaver.add(new CurrentPlay());
     }
 }

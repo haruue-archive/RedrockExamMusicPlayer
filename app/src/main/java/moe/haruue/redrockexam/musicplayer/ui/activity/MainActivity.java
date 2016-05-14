@@ -1,18 +1,150 @@
 package moe.haruue.redrockexam.musicplayer.ui.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import moe.haruue.redrockexam.musicplayer.R;
+import moe.haruue.redrockexam.musicplayer.data.database.helper.MusicDatabaseHelper;
+import moe.haruue.redrockexam.musicplayer.data.model.SongModel;
+import moe.haruue.redrockexam.musicplayer.ui.adapter.SongItemAdapter;
+import moe.haruue.redrockexam.musicplayer.ui.navigation.NavigationManager;
+import moe.haruue.redrockexam.ui.recyclerview.HaruueAdapter;
 import moe.haruue.redrockexam.ui.recyclerview.HaruueRecyclerView;
+import moe.haruue.redrockexam.util.ActivityManager;
+import moe.haruue.redrockexam.util.StandardUtils;
 import moe.haruue.redrockexam.util.abstracts.HaruueActivity;
 
 public class MainActivity extends HaruueActivity {
 
+    Toolbar toolbar;
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
+    NavigationManager navigationManager;
     HaruueRecyclerView playListView;
+    HaruueAdapter adapter;
+    Listener listener = new Listener();
+
+    /**
+     * 用于生成 requestCode 的序列数字，每使用一次都要 +1 （使用时直接 {@code serialNumber++）
+     */
+    int serialNumber = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // Single Task
+        try {
+            ActivityManager.finishPreviousActivity();
+        } catch (Exception e) {
+            StandardUtils.printStack(e);
+        }
+        initView();
+        initData();
+    }
+
+    private void initView() {
+        initToolbar();
+        initDrawer();
+        playListView = $(R.id.list_local_play_list);
+        playListView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new SongItemAdapter(this);
+        adapter.setAutoNotify(true);
+        playListView.setAdapter(adapter);
+        playListView.setOnRefreshListener(listener);
+        playListView.refresh();
+    }
+
+    private void initToolbar() {
+        toolbar = $(R.id.toolbar_in_activity);
+        toolbar.setTitle(R.string.app_name);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
+    }
+
+    private void initDrawer() {
+        drawerLayout = $(R.id.dl_main_drawer);
+        navigationView = $(R.id.nv_main_navigation);
+        navigationManager = new NavigationManager(this, drawerLayout, navigationView, R.id.nav_local_music);
+        navigationManager.initialize();
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
+    }
+
+    private void initData() {
+        listener.onRefresh();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        this.navigationManager = null;
+    }
+
+    class Listener implements SongItemAdapter.OnMoreInfoOptionButtonClickListener, HaruueAdapter.OnItemClickListener<SongModel>, SwipeRefreshLayout.OnRefreshListener, MusicDatabaseHelper.MusicDatabaseHelperListener {
+
+        /**
+         * 正数为增加，负数为删除
+         */
+        HashMap<Integer, SongModel> songModelWaitToChange = new HashMap<>(0);
+
+        @Override
+        public void onMoreInfoOptionButtonClickListener(View itemView, int position, SongModel model) {
+
+        }
+
+        @Override
+        public void onItemClick(int position, View view, SongModel model) {
+
+        }
+
+        @Override
+        public void onRefresh() {
+            MusicDatabaseHelper.queryAll(this, 0);
+        }
+
+        @Override
+        public void onMusicDatabaseQueryResult(ArrayList<SongModel> songModels, int requestCode) {
+            adapter.addAll(songModels);
+            playListView.getSwipeRefreshLayout().setRefreshing(false);
+        }
+
+        @Override
+        public void onMusicDatabaseSqlExecComplete(int requestCode) {
+            if (requestCode < 0) {
+                adapter.remove(songModelWaitToChange.get(requestCode));
+            } else {
+                adapter.add(songModelWaitToChange.get(requestCode));
+            }
+            songModelWaitToChange.remove(requestCode);
+            playListView.getSwipeRefreshLayout().setRefreshing(false);
+        }
+
+        @Override
+        public void onMusicDatabaseOperateFailure(Throwable t, int requestCode) {
+            StandardUtils.toast(R.string.operate_failure);
+            songModelWaitToChange.remove(requestCode);
+            playListView.getSwipeRefreshLayout().setRefreshing(false);
+        }
+    }
+
+    public static void start(Context context) {
+        Intent starter = new Intent(context, MainActivity.class);
+        context.startActivity(starter);
     }
 }

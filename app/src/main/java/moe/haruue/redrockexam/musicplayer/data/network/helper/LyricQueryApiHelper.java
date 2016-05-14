@@ -11,8 +11,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import moe.haruue.redrockexam.musicplayer.R;
+import moe.haruue.redrockexam.musicplayer.data.model.LyricModel;
 import moe.haruue.redrockexam.musicplayer.data.model.LyricQueryModel;
 import moe.haruue.redrockexam.musicplayer.data.network.Api;
+import moe.haruue.redrockexam.musicplayer.util.JSONUtils;
 import moe.haruue.redrockexam.util.StandardUtils;
 import moe.haruue.redrockexam.util.ThreadUtils;
 import moe.haruue.redrockexam.util.network.ApiHelper;
@@ -26,18 +28,18 @@ import moe.haruue.redrockexam.util.network.Request;
 public class LyricQueryApiHelper implements ApiHelper {
 
     public interface LyricQueryApiHelperListener extends ApiHelperListener {
-        void onGetSongLyricSuccess(String lyric, String lyricText);
+        void onGetSongLyricSuccess(LyricModel data);
         void onGetSongLyricFailure(int code, String error);
     }
 
-    public static void getSongLyric(Activity activity, final String musicId, final LyricQueryApiHelperListener listener) {
+    public static void getSongLyric(Activity activity, final int songId, final LyricQueryApiHelperListener listener) {
         ThreadUtils.runOnNewThread(activity, new Runnable() {
             @Override
             public void run() {
                 Map<String, String> paramMap = new HashMap<>(0);
                 paramMap.put("showapi_appid", Api.SHOWAPI_APIID);
                 paramMap.put("showapi_sign", Api.SHOWAPI_SIGN);
-                paramMap.put("musicid", musicId);
+                paramMap.put("musicid", songId + "");
                 String result;
                 final LyricQueryModel model = new LyricQueryModel();
                 try {
@@ -55,9 +57,9 @@ public class LyricQueryApiHelper implements ApiHelper {
                 JSONTokener tokener = new JSONTokener(result);
                 try {
                     JSONObject object = (JSONObject) tokener.nextValue();
-                    model.showapi_res_code = object.getInt("showapi_res_code");
+                    model.showapi_res_code = JSONUtils.getInt(object, "showapi_res_code");
                     if (model.showapi_res_code != 0) {
-                        model.showapi_res_error = object.getString("showapi_res_error");
+                        model.showapi_res_error = JSONUtils.getString(object, "showapi_res_error");
                         ThreadUtils.runOnUIThread(new Runnable() {
                             @Override
                             public void run() {
@@ -67,12 +69,16 @@ public class LyricQueryApiHelper implements ApiHelper {
                         return;
                     }
                     JSONObject resBodyObject = object.getJSONObject("showapi_res_body");
-                    final String lyric = resBodyObject.getString("lyric");
-                    final String lyricText = resBodyObject.getString("lyric_txt");
+                    final String lyric = JSONUtils.getString(resBodyObject, "lyric");
+                    final String lyricText = JSONUtils.getString(resBodyObject, "lyric_txt");
+                    final LyricModel data = new LyricModel();
+                    data.songId = songId;
+                    data.lyric = lyric;
+                    data.lyricText = lyricText;
                     ThreadUtils.runOnUIThread(new Runnable() {
                         @Override
                         public void run() {
-                            listener.onGetSongLyricSuccess(lyric, lyricText);
+                            listener.onGetSongLyricSuccess(data);
                         }
                     });
                 } catch (JSONException e) {

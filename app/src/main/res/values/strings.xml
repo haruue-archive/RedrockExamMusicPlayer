@@ -9,4 +9,10 @@
     <string name="load_error">加载错误，请重试</string>
     <string name="network_error">无法连接到网络</string>
     <string name="json_decode_exception">服务器返回无法解析的数据，请稍后再试</string>
+    <string name="internet_traffic_save">省流</string>
+    <string name="low_quality">低品音质</string>
+    <string name="standard_quality">标准音质</string>
+    <string name="vertical_ellipsis" translatable="false">⋮</string>
+    <string name="setting">设置</string>
+    <string name="operate_failure">操作失败，请重试</string>
 </resources>

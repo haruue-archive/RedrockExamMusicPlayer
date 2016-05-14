@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                xmlns:tool="http://schemas.android.com/tools"
+                android:padding="7dp"
+                android:foreground="?attr/selectableItemBackground">
+
+    <moe.haruue.redrockexam.ui.widget.CircleImageView
+        android:id="@+id/item_song_info_album_image"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"/>
+
+    <TextView
+        android:id="@+id/item_song_more_option"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:padding="8dp"
+        android:text="@string/vertical_ellipsis"
+        android:textStyle="bold"
+        android:textSize="17sp"
+        android:foreground="?attr/selectableItemBackground"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/item_song_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_toRightOf="@id/item_song_info_album_image"
+        android:layout_toLeftOf="@id/item_song_more_option"
+        android:paddingLeft="10dp">
+
+        <TextView
+            android:id="@+id/item_song_info_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tool:text="@string/app_name"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="marquee"/>
+
+        <TextView
+            android:id="@+id/item_song_info_singer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tool:text="测试歌唱家"
+            android:textColor="@color/gray_800"
+            android:maxLines="1"
+            android:ellipsize="marquee"/>
+
+        <LinearLayout
+            android:id="@+id/item_song_info_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/item_song_info_more_sign_m4a"
+                android:text="@string/low_quality"
+                android:textColor="@color/white"
+                android:background="@color/light_blue_A700"
+                android:padding="2dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/item_song_info_more_sign_mp3"
+                android:text="@string/standard_quality"
+                android:textColor="@color/white"
+                android:background="@color/green_A700"
+                android:padding="2dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/item_song_info_more_size_and_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tool:text="3:30 | 1.2MB"
+                android:layout_marginLeft="5dp"
+                android:textSize="15sp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -15,6 +15,7 @@ import java.util.Map;
 import moe.haruue.redrockexam.musicplayer.R;
 import moe.haruue.redrockexam.musicplayer.data.model.TopModel;
 import moe.haruue.redrockexam.musicplayer.data.network.Api;
+import moe.haruue.redrockexam.musicplayer.util.JSONUtils;
 import moe.haruue.redrockexam.util.StandardUtils;
 import moe.haruue.redrockexam.util.ThreadUtils;
 import moe.haruue.redrockexam.util.network.ApiHelper;
@@ -69,9 +70,9 @@ public class TopMusicApiHelper implements ApiHelper {
                 JSONTokener tokener = new JSONTokener(result);
                 try {
                     JSONObject object = (JSONObject) tokener.nextValue();
-                    model.showapi_res_code = object.getInt("showapi_res_code");
+                    model.showapi_res_code = JSONUtils.getInt(object, "showapi_res_code");
                     if (model.showapi_res_code != 0) {
-                        model.showapi_res_error = object.getString("showapi_res_error");
+                        model.showapi_res_error = JSONUtils.getString(object, "showapi_res_error");
                         ThreadUtils.runOnUIThread(new Runnable() {
                             @Override
                             public void run() {
@@ -85,14 +86,17 @@ public class TopMusicApiHelper implements ApiHelper {
                     for (int i = 0; i < array.length(); i++) {
                         JSONObject itemObject = array.getJSONObject(i);
                         TopModel.ResBody.PageBean.SongItem item = new TopModel.ResBody.PageBean.SongItem();
-                        item.albumid = itemObject.getInt("albumid");
-                        item.downUrl = itemObject.getString("downUrl");
-                        item.seconds = itemObject.getInt("seconds");
-                        item.singerid = itemObject.getInt("singerid");
-                        item.singername = itemObject.getString("singername");
-                        item.songid = itemObject.getInt("songid");
-                        item.songname = itemObject.getString("songname");
-                        item.url = itemObject.getString("url");
+                        item.albumid = JSONUtils.getInt(itemObject, "albumid");
+                        item.albummid = JSONUtils.getString(itemObject, "albummid");
+                        item.albumpic_big = JSONUtils.getString(itemObject, "albumpic_big");
+                        item.albumpic_small = JSONUtils.getString(itemObject, "albumpic_small");
+                        item.downUrl = JSONUtils.getString(itemObject, "downUrl");
+                        item.seconds = JSONUtils.getInt(itemObject, "seconds");
+                        item.singerid = JSONUtils.getInt(itemObject, "singerid");
+                        item.singername = JSONUtils.getString(itemObject, "singername");
+                        item.songid = JSONUtils.getInt(itemObject, "songid");
+                        item.songname = JSONUtils.getString(itemObject, "songname");
+                        item.url = JSONUtils.getString(itemObject, "url");
                         songList.add(item);
                     }
                     ThreadUtils.runOnUIThread(new Runnable() {

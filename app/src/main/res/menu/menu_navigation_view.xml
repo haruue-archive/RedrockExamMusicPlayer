@@ -22,6 +22,12 @@
             android:checkable="true"/>
 
         <item
+            android:id="@+id/nav_setting"
+            android:icon="@drawable/ic_build_black_24dp"
+            android:title="@string/setting"
+            android:checkable="false"/>
+
+        <item
             android:id="@+id/nav_exit"
             android:icon="@drawable/ic_exit_to_app_black_24dp"
             android:title="@string/exit"

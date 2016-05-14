@@ -23,6 +23,9 @@ public class TopModel implements Serializable {
 
             public static class SongItem implements Serializable {
                 public int albumid;
+                public String albummid;
+                public String albumpic_big;
+                public String albumpic_small;
                 public String downUrl;
                 public int seconds;
                 public int singerid;
@@ -30,6 +33,20 @@ public class TopModel implements Serializable {
                 public int songid;
                 public String songname;
                 public String url;
+
+                public SongModel toSongModel() {
+                    SongModel songModel = new SongModel();
+                    songModel.albumId = albumid;
+                    songModel.albumPicBig = albumpic_big;
+                    songModel.albumPicSmall = albumpic_small;
+                    songModel.downUrl = downUrl;
+                    songModel.seconds = seconds;
+                    songModel.singerName = singername;
+                    songModel.songId = songid;
+                    songModel.songName = songname;
+                    songModel.m4aUrl = url;
+                    return songModel;
+                }
             }
 
             public int totalpage;

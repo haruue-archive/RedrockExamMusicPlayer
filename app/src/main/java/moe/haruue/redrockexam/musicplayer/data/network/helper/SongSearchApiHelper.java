@@ -15,6 +15,7 @@ import java.util.Map;
 import moe.haruue.redrockexam.musicplayer.R;
 import moe.haruue.redrockexam.musicplayer.data.model.SongSearchModel;
 import moe.haruue.redrockexam.musicplayer.data.network.Api;
+import moe.haruue.redrockexam.musicplayer.util.JSONUtils;
 import moe.haruue.redrockexam.util.StandardUtils;
 import moe.haruue.redrockexam.util.ThreadUtils;
 import moe.haruue.redrockexam.util.network.ApiHelper;
@@ -60,9 +61,9 @@ public class SongSearchApiHelper implements ApiHelper {
                 JSONTokener tokener = new JSONTokener(result);
                 try {
                     JSONObject object = (JSONObject) tokener.nextValue();
-                    model.showapi_res_code = object.getInt("showapi_res_code");
+                    model.showapi_res_code = JSONUtils.getInt(object, "showapi_res_code");
                     if (model.showapi_res_code != 0) {
-                        model.showapi_res_error = object.getString("showapi_res_error");
+                        model.showapi_res_error = JSONUtils.getString(object, "showapi_res_error");
                         ThreadUtils.runOnUIThread(new Runnable() {
                             @Override
                             public void run() {
@@ -73,26 +74,27 @@ public class SongSearchApiHelper implements ApiHelper {
                     }
                     final SongSearchModel.ResBody.PageBean pageBean = new SongSearchModel.ResBody.PageBean();
                     JSONObject pageBeanObject = object.getJSONObject("showapi_res_body").getJSONObject("pagebean");
-                    pageBean.allNum = pageBeanObject.getInt("allNum");
-                    pageBean.allPages = pageBeanObject.getInt("allPages");
+                    pageBean.allNum = JSONUtils.getInt(pageBeanObject, "allNum");
+                    pageBean.allPages = JSONUtils.getInt(pageBeanObject, "allPages");
                     pageBean.contentList = new ArrayList<>(0);
-                    pageBean.currentPage = pageBeanObject.getInt("currentPage");
-                    pageBean.keyword = pageBeanObject.getString("keyword");
-                    pageBean.maxResult = pageBeanObject.getInt("maxResult");
+                    pageBean.currentPage = JSONUtils.getInt(pageBeanObject, "currentPage");
+                    pageBean.keyword = JSONUtils.getString(pageBeanObject, "keyword");
+                    pageBean.maxResult = JSONUtils.getInt(pageBeanObject, "maxResult");
                     JSONArray array = pageBeanObject.getJSONArray("contentlist");
                     for (int i = 0; i < array.length(); i++) {
                         JSONObject itemObject = array.getJSONObject(i);
                         SongSearchModel.ResBody.PageBean.ContentItem contentItem = new SongSearchModel.ResBody.PageBean.ContentItem();
-                        contentItem.albumid = itemObject.getString("albumid");
-                        contentItem.albumname = itemObject.getString("albumname");
-                        contentItem.albumpic_big = itemObject.getString("albumpic_big");
-                        contentItem.albumpic_small = itemObject.getString("albumpic_small");
-                        contentItem.downUrl = itemObject.getString("downUrl");
-                        contentItem.m4a = itemObject.getString("m4a");
-                        contentItem.singerid = itemObject.getString("singerid");
-                        contentItem.singername = itemObject.getString("singername");
-                        contentItem.songid = itemObject.getInt("songid");
-                        contentItem.songname = itemObject.getString("songname");
+                        contentItem.albumid = JSONUtils.getInt(itemObject, "albumid");
+                        contentItem.albummid = JSONUtils.getString(itemObject, "albummid");
+                        contentItem.albumname = JSONUtils.getString(itemObject, "albumname");
+                        contentItem.albumpic_big = JSONUtils.getString(itemObject, "albumpic_big");
+                        contentItem.albumpic_small = JSONUtils.getString(itemObject, "albumpic_small");
+                        contentItem.downUrl = JSONUtils.getString(itemObject, "downUrl");
+                        contentItem.m4a = JSONUtils.getString(itemObject, "m4a");
+                        contentItem.singerid = JSONUtils.getInt(itemObject, "singerid");
+                        contentItem.singername = JSONUtils.getString(itemObject, "singername");
+                        contentItem.songid = JSONUtils.getInt(itemObject, "songid");
+                        contentItem.songname = JSONUtils.getString(itemObject, "songname");
                         pageBean.contentList.add(contentItem);
                     }
                     ThreadUtils.runOnUIThread(new Runnable() {
