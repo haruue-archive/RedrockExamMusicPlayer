@@ -6,9 +6,9 @@ package moe.haruue.redrockexam.musicplayer.data.network;
 public class Api {
 
     // API URLs
-    public final static String TOP_LIST = "http://route.showapi.com/213-4";
-    public final static String LYRIC_QUERY = "http://route.showapi.com/213-2";
-    public final static String MUSIC_SEARCH = "http://route.showapi.com/213-1";
+    public final static String TOP_LIST = "https://route.showapi.com/213-4";
+    public final static String LYRIC_QUERY = "https://route.showapi.com/213-2";
+    public final static String MUSIC_SEARCH = "https://route.showapi.com/213-1";
 
     // API ID & API Secret
     public final static String SHOWAPI_APIID = "19017";
