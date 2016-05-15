@@ -6,4 +6,72 @@
               android:padding="10dp"
               android:layout_height="190dp">
 
+    <moe.haruue.redrockexam.ui.widget.CircleImageView
+        android:id="@+id/navigation_header_container_song_album_picture"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_margin="5dp"
+        android:foreground="?attr/selectableItemBackground"
+        android:layout_centerInParent="true"/>
+
+    <TextView
+        android:id="@+id/navigation_header_container_song_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/navigation_header_container_song_album_picture"
+        android:layout_centerHorizontal="true"
+        android:text="@string/app_name"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:maxLines="1"
+        android:ellipsize="marquee"/>
+
+    <LinearLayout
+        android:id="@+id/navigation_header_container_control_panel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/navigation_header_container_song_album_picture"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/navigation_header_container_button_previous"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:foreground="?attr/selectableItemBackground"
+            android:src="@drawable/ic_skip_previous_white_24dp"/>
+
+        <ImageView
+            android:id="@+id/navigation_header_container_button_play"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:foreground="?attr/selectableItemBackground"
+            android:src="@drawable/ic_play_arrow_white_24dp"/>
+
+        <ImageView
+            android:id="@+id/navigation_header_container_button_pause"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:foreground="?attr/selectableItemBackground"
+            android:src="@drawable/ic_pause_white_24dp"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/navigation_header_container_button_next"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:foreground="?attr/selectableItemBackground"
+            android:src="@drawable/ic_skip_next_white_24dp"/>
+
+    </LinearLayout>
+
 </RelativeLayout>

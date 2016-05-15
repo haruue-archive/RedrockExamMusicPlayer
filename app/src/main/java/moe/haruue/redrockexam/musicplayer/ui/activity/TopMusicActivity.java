@@ -51,7 +51,7 @@ public class TopMusicActivity extends HaruueActivity {
 
     private void initToolbar() {
         toolbar = $(R.id.toolbar_in_activity);
-        toolbar.setTitle(R.string.search);
+        toolbar.setTitle(R.string.hot_list);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
     }

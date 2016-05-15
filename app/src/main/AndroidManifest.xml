@@ -39,6 +39,9 @@
                 <action android:name="moe.haruue.redrockexam.musicplayer.action.musicstate"/>
             </intent-filter>
         </receiver>
+
+        <activity android:name=".ui.activity.SongActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -18,6 +18,7 @@ import moe.haruue.redrockexam.musicplayer.data.storage.CurrentBitmap;
 import moe.haruue.redrockexam.musicplayer.data.storage.CurrentPlay;
 import moe.haruue.redrockexam.musicplayer.ui.activity.MainActivity;
 import moe.haruue.redrockexam.musicplayer.ui.activity.SearchActivity;
+import moe.haruue.redrockexam.musicplayer.ui.activity.SongActivity;
 import moe.haruue.redrockexam.musicplayer.ui.activity.TopMusicActivity;
 import moe.haruue.redrockexam.musicplayer.ui.service.MusicPlayService;
 import moe.haruue.redrockexam.musicplayer.ui.service.MusicPlayServiceConnection;
@@ -60,6 +61,15 @@ public class NavigationManager {
                         MainActivity.start(context);
                     }
                     break;
+                case R.id.navigation_header_container_song_album_picture:
+                    if (!context.getClass().getName().equals(SongActivity.class.getName())) {
+                        SongActivity.start(context);
+                    }
+                case R.id.nav_current_play:
+                    if (!context.getClass().getName().equals(SongActivity.class.getName())) {
+                        SongActivity.start(context);
+                    }
+                    break;
                 case R.id.nav_hot:
                     if (!context.getClass().getName().equals(TopMusicActivity.class.getName())) {
                         TopMusicActivity.start(context);
@@ -70,13 +80,12 @@ public class NavigationManager {
                         SearchActivity.start(context);
                     }
                     break;
-                case R.id.nav_setting:
-                    break;
                 case R.id.nav_exit:
                     MusicPlayServiceConnection.getMediaPlayer().stop();
                     MusicPlayService.stop(context);
                     ActivityManager.exitApplication();
                     break;
+
             }
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;

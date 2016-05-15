@@ -124,4 +124,43 @@ public class MusicDatabaseHelper {
         return "DELETE FROM music WHERE songid = " + songId;
     }
 
+    public static void update(SongModel model, final MusicDatabaseHelperListener listener, final int requestCode) {
+        DatabaseUtils musicDatabaseUtil = DatabaseUtils.getDatabaseByName("music");
+        if (musicDatabaseUtil == null) {
+            listener.onMusicDatabaseOperateFailure(new NullPointerException("Can't get music database"), requestCode);
+        } else {
+            musicDatabaseUtil.exec(new String[]{gainUpdateSql(model)}, new ExecSqlListener() {
+                @Override
+                public void onExecSqlSuccess() {
+                    listener.onMusicDatabaseSqlExecComplete(requestCode);
+                }
+
+                @Override
+                public void onExecSqlError(Throwable t) {
+                    listener.onMusicDatabaseOperateFailure(t, requestCode);
+                }
+            });
+
+        }
+
+    }
+
+    private static String gainUpdateSql(SongModel model) {
+        return "UPDATE music SET " +
+                "songname = " + "\'" + model.songName + "\'," +
+                "singerid = " + model.singerId + "," +
+                "singername = " + "\'" + model.singerName + "\'," +
+                "albumid = " + model.albumId + "," +
+                "albumname = " + "\'" + model.albumName + "\'," +
+                "albumpic_big = " + "\'" + model.albumPicBig + "\'," +
+                "albumpic_small = " + "\'" + model.albumPicSmall + "\'," +
+                "m4a = " + "\'" + model.m4aUrl + "\'," +
+                "downUrl = " + "\'" + model.downUrl + "\'," +
+                "m4a_cache = " + "\'" + model.m4aCache + "\'," +
+                "file = " + "\'" + model.file + "\'," +
+                "second = " + model.seconds + "," +
+                "size = " + model.size +
+                " WHERE songid = " + model.songId;
+    }
+
 }

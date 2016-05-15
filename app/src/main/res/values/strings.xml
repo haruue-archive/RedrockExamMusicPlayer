@@ -21,4 +21,6 @@
     <string name="no_more">没有更多</string>
     <string name="no_play_list">无播放列表，快到乐库里挑选歌曲吧！</string>
     <string name="load_error_listen_other">加载错误，听听其他歌曲先吧</string>
+    <string name="playing">正在播放</string>
+    <string name="downloading">正在下载</string>
 </resources>
