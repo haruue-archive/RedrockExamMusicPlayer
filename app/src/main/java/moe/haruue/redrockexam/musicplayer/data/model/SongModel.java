@@ -34,4 +34,8 @@ public class SongModel implements Serializable {
         return songModelArrayList;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof SongModel && ((SongModel) o).songId == this.songId;
+    }
 }

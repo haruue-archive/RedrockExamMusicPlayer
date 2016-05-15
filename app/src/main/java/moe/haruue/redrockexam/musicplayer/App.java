@@ -28,8 +28,8 @@ public class App extends HaruueApplication {
         NetworkUtils.initialize(this, new NetworkConfiguration().setConnectTimeout(60).setReadTimeout(9999).setRequestMethod(NetworkConfiguration.RequestMethods.POST));
         // Initialize ImageLoader
         ImageLoaderConfig.start(this)
-                .setDefaultDrawableOnLoading(R.drawable.ic_music_note_black_24dp)
-                .setDefaultDrawableOnFailure(R.drawable.ic_music_note_black_24dp)
+                .setDefaultDrawableOnLoading(R.drawable.default_album)
+                .setDefaultDrawableOnFailure(R.drawable.default_album)
                 .build();
         // Initialize Database
         DatabaseUtils.initialize(this);

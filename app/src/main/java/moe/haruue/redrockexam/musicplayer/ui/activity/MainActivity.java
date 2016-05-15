@@ -17,13 +17,18 @@ import java.util.HashMap;
 import moe.haruue.redrockexam.musicplayer.R;
 import moe.haruue.redrockexam.musicplayer.data.database.helper.MusicDatabaseHelper;
 import moe.haruue.redrockexam.musicplayer.data.model.SongModel;
+import moe.haruue.redrockexam.musicplayer.data.storage.CurrentPlayList;
 import moe.haruue.redrockexam.musicplayer.ui.adapter.SongItemAdapter;
 import moe.haruue.redrockexam.musicplayer.ui.navigation.NavigationManager;
+import moe.haruue.redrockexam.musicplayer.ui.service.MusicPlayService;
+import moe.haruue.redrockexam.musicplayer.ui.service.MusicPlayerController;
 import moe.haruue.redrockexam.ui.recyclerview.HaruueAdapter;
 import moe.haruue.redrockexam.ui.recyclerview.HaruueRecyclerView;
 import moe.haruue.redrockexam.util.ActivityManager;
 import moe.haruue.redrockexam.util.StandardUtils;
 import moe.haruue.redrockexam.util.abstracts.HaruueActivity;
+import moe.haruue.redrockexam.util.permission.RequestPermission;
+import moe.haruue.redrockexam.util.permission.RequestPermissionListener;
 
 public class MainActivity extends HaruueActivity {
 
@@ -32,7 +37,7 @@ public class MainActivity extends HaruueActivity {
     NavigationView navigationView;
     NavigationManager navigationManager;
     HaruueRecyclerView playListView;
-    HaruueAdapter adapter;
+    SongItemAdapter adapter;
     Listener listener = new Listener();
 
     /**
@@ -44,12 +49,16 @@ public class MainActivity extends HaruueActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // Service
+        MusicPlayService.start(this);
+        MusicPlayService.bind(this);
         // Single Task
         try {
             ActivityManager.finishPreviousActivity();
         } catch (Exception e) {
             StandardUtils.printStack(e);
         }
+        RequestPermission.getInstance(this).requestPermission(listener, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
         initView();
         initData();
     }
@@ -61,6 +70,7 @@ public class MainActivity extends HaruueActivity {
         playListView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new SongItemAdapter(this);
         adapter.setAutoNotify(true);
+        adapter.setOnItemClickListener(listener);
         playListView.setAdapter(adapter);
         playListView.setOnRefreshListener(listener);
         playListView.refresh();
@@ -94,9 +104,10 @@ public class MainActivity extends HaruueActivity {
     protected void onDestroy() {
         super.onDestroy();
         this.navigationManager = null;
+        MusicPlayService.unbind(this);
     }
 
-    class Listener implements SongItemAdapter.OnMoreInfoOptionButtonClickListener, HaruueAdapter.OnItemClickListener<SongModel>, SwipeRefreshLayout.OnRefreshListener, MusicDatabaseHelper.MusicDatabaseHelperListener {
+    class Listener implements SongItemAdapter.OnMoreInfoOptionButtonClickListener, HaruueAdapter.OnItemClickListener<SongModel>, SwipeRefreshLayout.OnRefreshListener, MusicDatabaseHelper.MusicDatabaseHelperListener, RequestPermissionListener {
 
         /**
          * 正数为增加，负数为删除
@@ -110,7 +121,7 @@ public class MainActivity extends HaruueActivity {
 
         @Override
         public void onItemClick(int position, View view, SongModel model) {
-
+            MusicPlayerController.play(model);
         }
 
         @Override
@@ -120,16 +131,24 @@ public class MainActivity extends HaruueActivity {
 
         @Override
         public void onMusicDatabaseQueryResult(ArrayList<SongModel> songModels, int requestCode) {
-            adapter.addAll(songModels);
+            adapter.clear();
+            if (songModels.isEmpty()) {
+                playListView.showEmpty();
+            } else {
+                adapter.addAll(songModels);
+            }
             playListView.getSwipeRefreshLayout().setRefreshing(false);
+            CurrentPlayList.instance.playList = songModels;
         }
 
         @Override
         public void onMusicDatabaseSqlExecComplete(int requestCode) {
             if (requestCode < 0) {
                 adapter.remove(songModelWaitToChange.get(requestCode));
+                CurrentPlayList.instance.playList.remove(songModelWaitToChange.get(requestCode));
             } else {
                 adapter.add(songModelWaitToChange.get(requestCode));
+                CurrentPlayList.instance.playList.add(songModelWaitToChange.get(requestCode));
             }
             songModelWaitToChange.remove(requestCode);
             playListView.getSwipeRefreshLayout().setRefreshing(false);
@@ -139,7 +158,19 @@ public class MainActivity extends HaruueActivity {
         public void onMusicDatabaseOperateFailure(Throwable t, int requestCode) {
             StandardUtils.toast(R.string.operate_failure);
             songModelWaitToChange.remove(requestCode);
+            playListView.showError();
             playListView.getSwipeRefreshLayout().setRefreshing(false);
+        }
+
+        @Override
+        public void onPermissionGranted(String[] permissions) {
+
+        }
+
+        @Override
+        public void onPermissionDenied(String[] permissions) {
+            StandardUtils.toast(R.string.permission_denied_exception);
+            ActivityManager.finishAllActivity();
         }
     }
 

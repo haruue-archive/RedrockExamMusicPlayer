@@ -1,7 +1,7 @@
 package moe.haruue.redrockexam.musicplayer.data.network.helper;
 
 import android.accounts.NetworkErrorException;
-import android.app.Activity;
+import android.support.v4.app.Fragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,8 +45,8 @@ public class TopMusicApiHelper implements ApiHelper {
         void onGetTopMusicFailure(int code, String error);
     }
 
-    public static void getTopMusicList(Activity activity, final int topId, final TopMusicApiHelperListener listener) {
-        ThreadUtils.runOnNewThread(activity, new Runnable() {
+    public static void getTopMusicList(Fragment fragment, final int topId, final TopMusicApiHelperListener listener) {
+        ThreadUtils.runOnNewThread(fragment, new Runnable() {
             @Override
             public void run() {
                 Map<String, String> paramMap = new HashMap<>(0);

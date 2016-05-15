@@ -13,7 +13,6 @@ public class CurrentPlay extends InstanceSavable {
     public static CurrentPlay instance = new CurrentPlay();
 
     public SongModel data;
-    public boolean isPlaying = false;
 
     public SongModel getData() {
         return data;

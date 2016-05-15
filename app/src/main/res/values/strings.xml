@@ -15,4 +15,10 @@
     <string name="vertical_ellipsis" translatable="false">⋮</string>
     <string name="setting">设置</string>
     <string name="operate_failure">操作失败，请重试</string>
+    <string name="permission_denied_exception">抱歉，由于没有必要的权限，我们无法为您播放音乐</string>
+    <string name="click_to_load_more">点击加载下一页</string>
+    <string name="loading_more">正在加载更多</string>
+    <string name="no_more">没有更多</string>
+    <string name="no_play_list">无播放列表，快到乐库里挑选歌曲吧！</string>
+    <string name="load_error_listen_other">加载错误，听听其他歌曲先吧</string>
 </resources>

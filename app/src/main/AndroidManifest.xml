@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="moe.haruue.redrockexam.musicplayer">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -18,6 +21,24 @@
         </activity>
         <activity android:name=".ui.activity.SearchActivity">
         </activity>
+
+        <service
+            android:name=".ui.service.MusicPlayService"
+            android:enabled="true"
+            android:exported="false">
+        </service>
+
+        <activity android:name=".ui.activity.TopMusicActivity">
+        </activity>
+
+        <receiver
+            android:name=".receiver.MusicStateReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="moe.haruue.redrockexam.musicplayer.action.musicstate"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

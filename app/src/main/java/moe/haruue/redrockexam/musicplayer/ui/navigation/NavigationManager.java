@@ -10,11 +10,15 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import cn.com.caoyue.imageloader.ImageConfig;
 import cn.com.caoyue.imageloader.ImageLoader;
 import moe.haruue.redrockexam.musicplayer.R;
 import moe.haruue.redrockexam.musicplayer.data.storage.CurrentPlay;
 import moe.haruue.redrockexam.musicplayer.ui.activity.MainActivity;
+import moe.haruue.redrockexam.musicplayer.ui.activity.SearchActivity;
+import moe.haruue.redrockexam.musicplayer.ui.activity.TopMusicActivity;
+import moe.haruue.redrockexam.musicplayer.ui.service.MusicPlayService;
+import moe.haruue.redrockexam.musicplayer.ui.service.MusicPlayServiceConnection;
+import moe.haruue.redrockexam.musicplayer.ui.service.MusicPlayerController;
 import moe.haruue.redrockexam.ui.widget.CircleImageView;
 import moe.haruue.redrockexam.util.ActivityManager;
 import moe.haruue.redrockexam.util.StandardUtils;
@@ -40,9 +44,10 @@ public class NavigationManager {
     public void initialize() {
         initHeader();
         navigationView.setNavigationItemSelectedListener(listener);
+        MusicPlayerController.addToCurrentPlayMusicListeners(listener);
     }
 
-    public class Listener implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+    public class Listener implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, MusicPlayerController.OnCurrentPlayMusicChangeListener {
 
         @Override
         public boolean onNavigationItemSelected(MenuItem item) {
@@ -53,12 +58,20 @@ public class NavigationManager {
                     }
                     break;
                 case R.id.nav_hot:
+                    if (!context.getClass().getName().equals(TopMusicActivity.class.getName())) {
+                        TopMusicActivity.start(context);
+                    }
                     break;
                 case R.id.nav_search:
+                    if (!context.getClass().getName().equals(SearchActivity.class.getName())) {
+                        SearchActivity.start(context);
+                    }
                     break;
                 case R.id.nav_setting:
                     break;
                 case R.id.nav_exit:
+                    MusicPlayServiceConnection.getMediaPlayer().stop();
+                    MusicPlayService.stop(context);
                     ActivityManager.exitApplication();
                     break;
             }
@@ -82,6 +95,11 @@ public class NavigationManager {
             }
 
         }
+
+        @Override
+        public void onCurrentPlayMusicChange() {
+            refreshHeader();
+        }
     }
 
     // View in Header
@@ -93,16 +111,16 @@ public class NavigationManager {
     ImageView nextButton;
 
     private void initHeader() {
-        songTitleTextView = StandardUtils.$(navigationView, R.id.navigation_header_container_song_title);
-        songAlbumPictureImageView = StandardUtils.$(navigationView, R.id.navigation_header_container_song_album_picture);
+        songTitleTextView = StandardUtils.$(navigationView.getHeaderView(0), R.id.navigation_header_container_song_title);
+        songAlbumPictureImageView = StandardUtils.$(navigationView.getHeaderView(0), R.id.navigation_header_container_song_album_picture);
         songAlbumPictureImageView.setOnClickListener(listener);
-        previousButton = StandardUtils.$(navigationView, R.id.navigation_header_container_button_previous);
+        previousButton = StandardUtils.$(navigationView.getHeaderView(0), R.id.navigation_header_container_button_previous);
         previousButton.setOnClickListener(listener);
-        playButton = StandardUtils.$(navigationView, R.id.navigation_header_container_button_play);
+        playButton = StandardUtils.$(navigationView.getHeaderView(0), R.id.navigation_header_container_button_play);
         playButton.setOnClickListener(listener);
-        pauseButton = StandardUtils.$(navigationView, R.id.navigation_header_container_button_pause);
+        pauseButton = StandardUtils.$(navigationView.getHeaderView(0), R.id.navigation_header_container_button_pause);
         pauseButton.setOnClickListener(listener);
-        nextButton = StandardUtils.$(navigationView, R.id.navigation_header_container_button_next);
+        nextButton = StandardUtils.$(navigationView.getHeaderView(0), R.id.navigation_header_container_button_next);
         nextButton.setOnClickListener(listener);
         refreshHeader();
     }
@@ -110,11 +128,11 @@ public class NavigationManager {
     public void refreshHeader() {
         if (CurrentPlay.instance.data != null) {
             songTitleTextView.setText(CurrentPlay.instance.data.songName);
-            ImageLoader.getInstance().loadImage(CurrentPlay.instance.data.albumPicSmall, songAlbumPictureImageView, new ImageConfig().setDrawableOnLoading(R.drawable.ic_music_note_white_24dp).setDrawableOnFailure(R.drawable.ic_music_note_white_24dp));
-            setPlayButtonStatus(CurrentPlay.instance.isPlaying);
+            ImageLoader.getInstance().loadImage(CurrentPlay.instance.data.albumPicSmall, songAlbumPictureImageView);
+            setPlayButtonStatus(MusicPlayServiceConnection.getMediaPlayer().isPlaying());
         } else {
             songTitleTextView.setText(R.string.app_name);
-            songAlbumPictureImageView.setImageBitmap(StandardUtils.getDrawableResourceAsBitmap(R.drawable.ic_music_note_white_24dp));
+            ImageLoader.getInstance().loadImage("", songAlbumPictureImageView);
             setPlayButtonStatus(false);
         }
     }
