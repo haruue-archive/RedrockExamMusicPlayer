@@ -84,7 +84,11 @@ public class NavigationManager {
                 case R.id.nav_exit:
                     MusicPlayServiceConnection.getMediaPlayer().stop();
                     MusicPlayService.stop(context);
-                    MusicPlayServiceConnection.getInstance().getBinder().cancelNotification();
+                    try {
+                        MusicPlayServiceConnection.getInstance().getBinder().cancelNotification();
+                    } catch (Exception e) {
+                        StandardUtils.printStack(e);
+                    }
                     DownloadService.stop(context);
                     ActivityManager.exitApplication();
                     break;

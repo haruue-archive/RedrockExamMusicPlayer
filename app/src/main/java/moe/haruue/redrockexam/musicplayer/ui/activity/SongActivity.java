@@ -192,7 +192,9 @@ public class SongActivity extends HaruueActivity {
                     MusicPlayerController.previous();
                     break;
                 case R.id.song_button_download:
-                    DownloadService.start(SongActivity.this, CurrentPlay.instance.data, "/sdcard/Music/" + CurrentPlay.instance.data.songName + ".mp3");
+                    if (CurrentPlay.instance.data != null) {
+                        DownloadService.start(SongActivity.this, CurrentPlay.instance.data, "/sdcard/Music/" + CurrentPlay.instance.data.songName + ".mp3");
+                    }
             }
         }
 

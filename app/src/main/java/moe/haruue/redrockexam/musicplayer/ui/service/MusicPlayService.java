@@ -48,7 +48,11 @@ public class MusicPlayService extends Service {
         }
 
         public void cancelNotification() {
-            notificationUtils.cancel();
+            try {
+                notificationUtils.cancel();
+            } catch (Exception e) {
+                StandardUtils.printStack(e);
+            }
         }
 
     }

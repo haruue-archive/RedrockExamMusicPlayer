@@ -72,7 +72,7 @@ public class DownloadService extends Service {
         threadMap.put(signNumber, ThreadUtils.runOnNewThread(new Runnable() {
             @Override
             public void run() {
-                Request request = new Request(data.downUrl, new HashMap<String, Object>(0), new NetworkConfiguration().setRequestMethod("GET").setReadTimeout(10000));
+                Request request = new Request(data.downUrl, new HashMap<String, Object>(0), new NetworkConfiguration().setRequestMethod("GET").setConnectTimeout(10000).setReadTimeout(10000));
                 try {
                     Request.Streams stream = request.getConnectionStreams();
                     status.fileSize = stream.connection.getContentLength();

@@ -30,4 +30,6 @@
     <string name="download_complete">下载完成</string>
     <string name="download_failure">下载失败</string>
     <string name="unknow_exception">未知异常</string>
+    <string name="select_operate">选择操作</string>
+    <string name="what_you_want_to_do">你要干什么？</string>
 </resources>

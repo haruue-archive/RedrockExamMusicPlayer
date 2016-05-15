@@ -77,12 +77,16 @@ public class SongItemAdapter extends HaruueAdapter<SongModel> {
 
         @Override
         public void setData(SongModel data) {
-            this.data = data;
-            ImageLoader.getInstance().loadImage(data.albumPicSmall, albumPictureImageView);
-            titleTextView.setText(data.songName);
-            singerTextView.setText(data.singerName);
-            setSign(data);
-            setMoreInfo(data);
+            if (data != null) {
+                this.data = data;
+                ImageLoader.getInstance().loadImage(data.albumPicSmall, albumPictureImageView);
+                titleTextView.setText(data.songName);
+                singerTextView.setText(data.singerName);
+                setSign(data);
+                setMoreInfo(data);
+            } else {
+                itemView.setVisibility(View.GONE);
+            }
         }
 
         private void setSign(SongModel data) {

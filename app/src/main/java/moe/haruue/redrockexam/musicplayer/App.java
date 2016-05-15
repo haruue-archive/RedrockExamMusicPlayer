@@ -25,7 +25,7 @@ public class App extends HaruueApplication {
         // Initialize FileUtils
         FileUtils.initialize(this);
         // Initialize NetWorkUtils
-        NetworkUtils.initialize(this, new NetworkConfiguration().setConnectTimeout(60).setReadTimeout(9999).setRequestMethod(NetworkConfiguration.RequestMethods.POST));
+        NetworkUtils.initialize(this, new NetworkConfiguration().setConnectTimeout(9999).setReadTimeout(9999).setRequestMethod(NetworkConfiguration.RequestMethods.POST));
         // Initialize ImageLoader
         ImageLoaderConfig.start(this)
                 .setDefaultDrawableOnLoading(R.drawable.default_album)

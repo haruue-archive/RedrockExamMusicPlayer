@@ -1,6 +1,7 @@
 package moe.haruue.redrockexam.musicplayer.ui.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,6 +9,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -26,9 +28,11 @@ import moe.haruue.redrockexam.musicplayer.data.storage.CurrentPlay;
 import moe.haruue.redrockexam.musicplayer.data.storage.CurrentPlayList;
 import moe.haruue.redrockexam.musicplayer.ui.adapter.SongItemAdapter;
 import moe.haruue.redrockexam.musicplayer.ui.navigation.NavigationManager;
+import moe.haruue.redrockexam.musicplayer.ui.service.DownloadService;
 import moe.haruue.redrockexam.musicplayer.ui.service.MusicPlayService;
 import moe.haruue.redrockexam.musicplayer.ui.service.MusicPlayServiceConnection;
 import moe.haruue.redrockexam.musicplayer.ui.service.MusicPlayerController;
+import moe.haruue.redrockexam.musicplayer.util.LocalUtils;
 import moe.haruue.redrockexam.ui.recyclerview.HaruueAdapter;
 import moe.haruue.redrockexam.ui.recyclerview.HaruueRecyclerView;
 import moe.haruue.redrockexam.ui.widget.CircleImageView;
@@ -199,10 +203,10 @@ public class MainActivity extends HaruueActivity {
         public void onMusicDatabaseSqlExecComplete(int requestCode) {
             if (requestCode < 0) {
                 adapter.remove(songModelWaitToChange.get(requestCode));
-                CurrentPlayList.instance.playList.remove(songModelWaitToChange.get(requestCode));
+                adapter.notifyDataSetChanged();
             } else {
                 adapter.add(songModelWaitToChange.get(requestCode));
-                CurrentPlayList.instance.playList.add(songModelWaitToChange.get(requestCode));
+                adapter.notifyDataSetChanged();
             }
             songModelWaitToChange.remove(requestCode);
             playListView.getSwipeRefreshLayout().setRefreshing(false);
@@ -259,7 +263,51 @@ public class MainActivity extends HaruueActivity {
         }
 
         @Override
-        public boolean onItemLongClick(int position, View view, SongModel model) {
+        public boolean onItemLongClick(int position, View view, final SongModel model) {
+            if (LocalUtils.isLocal(model)) {
+                new AlertDialog.Builder(MainActivity.this).setTitle(model.songName)
+                        .setMessage(getResources().getString(R.string.select_operate))
+                        .setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                int signNumber = serialNumber++;
+                                songModelWaitToChange.put(-1 * signNumber, model);
+                                MusicDatabaseHelper.delete(model.songId, Listener.this, signNumber);
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNeutralButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).create().show();
+            } else {
+                new AlertDialog.Builder(MainActivity.this).setTitle(model.songName)
+                        .setMessage(getResources().getString(R.string.select_operate))
+                        .setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                int signNumber = serialNumber++;
+                                songModelWaitToChange.put(-1 * signNumber, model);
+                                MusicDatabaseHelper.delete(model.songId, Listener.this, signNumber);
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton("下载", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                DownloadService.start(MainActivity.this, model, "/sdcard/Music/" + model.songName + ".mp3");
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNeutralButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).create().show();
+            }
             return true;
         }
     }
