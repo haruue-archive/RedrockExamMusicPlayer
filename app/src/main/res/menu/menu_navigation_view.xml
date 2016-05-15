@@ -28,12 +28,6 @@
             android:checkable="true"/>
 
         <item
-            android:id="@+id/nav_downloading"
-            android:icon="@drawable/ic_build_black_24dp"
-            android:title="@string/downloading"
-            android:checkable="true"/>
-
-        <item
             android:id="@+id/nav_exit"
             android:icon="@drawable/ic_exit_to_app_black_24dp"
             android:title="@string/exit"

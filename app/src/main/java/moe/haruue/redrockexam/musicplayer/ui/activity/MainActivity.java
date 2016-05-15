@@ -36,7 +36,6 @@ import moe.haruue.redrockexam.util.ActivityManager;
 import moe.haruue.redrockexam.util.StandardUtils;
 import moe.haruue.redrockexam.util.ThreadUtils;
 import moe.haruue.redrockexam.util.abstracts.HaruueActivity;
-import moe.haruue.redrockexam.util.permission.RequestPermission;
 import moe.haruue.redrockexam.util.permission.RequestPermissionListener;
 
 public class MainActivity extends HaruueActivity {
@@ -74,7 +73,6 @@ public class MainActivity extends HaruueActivity {
         } catch (Exception e) {
             StandardUtils.printStack(e);
         }
-        RequestPermission.getInstance(this).requestPermission(listener, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
         initView();
         initData();
         MusicPlayerController.addToCurrentPlayMusicListeners(listener);
@@ -89,6 +87,7 @@ public class MainActivity extends HaruueActivity {
         adapter = new SongItemAdapter(this);
         adapter.setAutoNotify(true);
         adapter.setOnItemClickListener(listener);
+        adapter.setOnItemLongClickListener(listener);
         playListView.setAdapter(adapter);
         playListView.setOnRefreshListener(listener);
 //        playListView.refresh();
@@ -138,7 +137,11 @@ public class MainActivity extends HaruueActivity {
                 @Override
                 public void run() {
                     if (MusicPlayServiceConnection.getMediaPlayer() != null) {
-                        seekBar.setProgress(MusicPlayServiceConnection.getMediaPlayer().getCurrentPosition());
+                        try {
+                            seekBar.setProgress(MusicPlayServiceConnection.getMediaPlayer().getCurrentPosition());
+                        } catch (Exception e) {
+                            StandardUtils.printStack(e);
+                        }
                         handler.postDelayed(this, 1000);
                     }
                 }
@@ -157,7 +160,7 @@ public class MainActivity extends HaruueActivity {
         MusicPlayService.unbind(this);
     }
 
-    class Listener implements SongItemAdapter.OnMoreInfoOptionButtonClickListener, HaruueAdapter.OnItemClickListener<SongModel>, SwipeRefreshLayout.OnRefreshListener, MusicDatabaseHelper.MusicDatabaseHelperListener, RequestPermissionListener, MusicPlayerController.OnCurrentPlayMusicChangeListener, View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+    class Listener implements SongItemAdapter.OnMoreInfoOptionButtonClickListener, HaruueAdapter.OnItemClickListener<SongModel>, SwipeRefreshLayout.OnRefreshListener, MusicDatabaseHelper.MusicDatabaseHelperListener, RequestPermissionListener, MusicPlayerController.OnCurrentPlayMusicChangeListener, View.OnClickListener, SeekBar.OnSeekBarChangeListener, HaruueAdapter.OnItemLongClickListener<SongModel> {
 
         /**
          * 正数为增加，负数为删除
@@ -189,6 +192,7 @@ public class MainActivity extends HaruueActivity {
             }
             playListView.getSwipeRefreshLayout().setRefreshing(false);
             CurrentPlayList.instance.playList = songModels;
+            playListView.getSwipeRefreshLayout().setRefreshing(false);
         }
 
         @Override
@@ -252,6 +256,11 @@ public class MainActivity extends HaruueActivity {
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
 
+        }
+
+        @Override
+        public boolean onItemLongClick(int position, View view, SongModel model) {
+            return true;
         }
     }
 

@@ -20,6 +20,7 @@ import moe.haruue.redrockexam.musicplayer.ui.activity.MainActivity;
 import moe.haruue.redrockexam.musicplayer.ui.activity.SearchActivity;
 import moe.haruue.redrockexam.musicplayer.ui.activity.SongActivity;
 import moe.haruue.redrockexam.musicplayer.ui.activity.TopMusicActivity;
+import moe.haruue.redrockexam.musicplayer.ui.service.DownloadService;
 import moe.haruue.redrockexam.musicplayer.ui.service.MusicPlayService;
 import moe.haruue.redrockexam.musicplayer.ui.service.MusicPlayServiceConnection;
 import moe.haruue.redrockexam.musicplayer.ui.service.MusicPlayerController;
@@ -83,6 +84,8 @@ public class NavigationManager {
                 case R.id.nav_exit:
                     MusicPlayServiceConnection.getMediaPlayer().stop();
                     MusicPlayService.stop(context);
+                    MusicPlayServiceConnection.getInstance().getBinder().cancelNotification();
+                    DownloadService.stop(context);
                     ActivityManager.exitApplication();
                     break;
 
@@ -95,6 +98,7 @@ public class NavigationManager {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.navigation_header_container_song_album_picture:
+                    SongActivity.start(context);
                     break;
                 case R.id.navigation_header_container_button_previous:
                     MusicPlayerController.previous();

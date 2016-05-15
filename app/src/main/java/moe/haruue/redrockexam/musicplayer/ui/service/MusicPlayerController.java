@@ -2,13 +2,13 @@ package moe.haruue.redrockexam.musicplayer.ui.service;
 
 import android.media.MediaPlayer;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import moe.haruue.redrockexam.musicplayer.R;
 import moe.haruue.redrockexam.musicplayer.data.model.SongModel;
 import moe.haruue.redrockexam.musicplayer.data.storage.CurrentPlay;
 import moe.haruue.redrockexam.musicplayer.data.storage.CurrentPlayList;
+import moe.haruue.redrockexam.musicplayer.util.LocalUtils;
 import moe.haruue.redrockexam.util.StandardUtils;
 
 /**
@@ -61,18 +61,15 @@ public class MusicPlayerController {
             StandardUtils.log("song.m4aUrl: " + song.m4aUrl);
             if (CurrentPlay.instance.data != null) {
                 if (CurrentPlay.instance.data.equals(song)) {
-                    MusicPlayServiceConnection.getMediaPlayer().reset();
-                    MusicPlayServiceConnection.getMediaPlayer().start();
+                    MusicPlayServiceConnection.getMediaPlayer().seekTo(0);
                     return;
                 } else {
                     MusicPlayServiceConnection.getMediaPlayer().stop();
                     MusicPlayServiceConnection.getMediaPlayer().reset();
                 }
             }
-            if (song.file != null && !song.file.isEmpty() && new File(song.file).exists()) {
+            if (LocalUtils.isLocal(song)) {
                 MusicPlayServiceConnection.getMediaPlayer().setDataSource(song.file);
-            } else if (song.m4aCache != null && !song.m4aCache.isEmpty() && new File(song.m4aCache).exists()) {
-                MusicPlayServiceConnection.getMediaPlayer().setDataSource(song.m4aCache);
             } else {
                 MusicPlayServiceConnection.getMediaPlayer().setDataSource(song.m4aUrl);
             }
@@ -122,7 +119,7 @@ public class MusicPlayerController {
         listeners.remove(listener);
     }
 
-    private static void notifyCurrentPlayMusicChange() {
+    static void notifyCurrentPlayMusicChange() {
         for (OnCurrentPlayMusicChangeListener l: listeners) {
             try {
                 l.onCurrentPlayMusicChange();

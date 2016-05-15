@@ -63,7 +63,7 @@
 
             <TextView
                 android:id="@+id/item_song_info_more_sign_m4a"
-                android:text="@string/low_quality"
+                android:text="@string/network"
                 android:textColor="@color/white"
                 android:background="@color/light_blue_A700"
                 android:padding="2dp"
@@ -72,7 +72,7 @@
 
             <TextView
                 android:id="@+id/item_song_info_more_sign_mp3"
-                android:text="@string/standard_quality"
+                android:text="@string/local"
                 android:textColor="@color/white"
                 android:background="@color/green_A700"
                 android:padding="2dp"

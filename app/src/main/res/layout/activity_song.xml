@@ -65,6 +65,15 @@
                     android:foreground="?attr/selectableItemBackground"
                     android:src="@drawable/ic_repeat_black_24dp"/>
 
+                <ImageView
+                    android:id="@+id/song_button_download"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@id/song_button_play_mode"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:src="@drawable/ic_get_app_black_24dp"/>
+
             </RelativeLayout>
 
             <SeekBar

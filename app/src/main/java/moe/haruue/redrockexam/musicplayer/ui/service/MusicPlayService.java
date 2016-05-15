@@ -47,6 +47,10 @@ public class MusicPlayService extends Service {
             return MusicPlayService.this.player;
         }
 
+        public void cancelNotification() {
+            notificationUtils.cancel();
+        }
+
     }
 
     public void refreshNotification() {
@@ -104,6 +108,7 @@ public class MusicPlayService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        notificationUtils.cancel();
         player.release();
     }
 }

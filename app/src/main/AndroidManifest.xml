@@ -30,18 +30,14 @@
 
         <activity android:name=".ui.activity.TopMusicActivity">
         </activity>
-
-        <receiver
-            android:name=".receiver.MusicStateReceiver"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="moe.haruue.redrockexam.musicplayer.action.musicstate"/>
-            </intent-filter>
-        </receiver>
-
         <activity android:name=".ui.activity.SongActivity">
         </activity>
+
+        <service
+            android:name=".ui.service.DownloadService"
+            android:enabled="true"
+            android:exported="false">
+        </service>
     </application>
 
 </manifest>

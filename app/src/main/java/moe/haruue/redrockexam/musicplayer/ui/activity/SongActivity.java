@@ -1,5 +1,6 @@
 package moe.haruue.redrockexam.musicplayer.ui.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,13 +19,16 @@ import moe.haruue.redrockexam.musicplayer.R;
 import moe.haruue.redrockexam.musicplayer.data.storage.CurrentPlay;
 import moe.haruue.redrockexam.musicplayer.data.storage.CurrentPlayList;
 import moe.haruue.redrockexam.musicplayer.ui.navigation.NavigationManager;
+import moe.haruue.redrockexam.musicplayer.ui.service.DownloadService;
 import moe.haruue.redrockexam.musicplayer.ui.service.MusicPlayService;
 import moe.haruue.redrockexam.musicplayer.ui.service.MusicPlayServiceConnection;
 import moe.haruue.redrockexam.musicplayer.ui.service.MusicPlayerController;
+import moe.haruue.redrockexam.musicplayer.util.LocalUtils;
 import moe.haruue.redrockexam.util.ActivityManager;
 import moe.haruue.redrockexam.util.StandardUtils;
 import moe.haruue.redrockexam.util.ThreadUtils;
 import moe.haruue.redrockexam.util.abstracts.HaruueActivity;
+import moe.haruue.redrockexam.util.permission.RequestPermission;
 
 public class SongActivity extends HaruueActivity {
 
@@ -41,6 +45,7 @@ public class SongActivity extends HaruueActivity {
     ImageView nextButton;
     ImageView playButton;
     ImageView pauseButton;
+    ImageView downloadButton;
     SeekBar seekBar;
 
     Listener listener = new Listener();
@@ -79,7 +84,10 @@ public class SongActivity extends HaruueActivity {
         playButton = $(R.id.song_button_play);
         playButton.setOnClickListener(listener);
         pauseButton = $(R.id.song_button_pause);
-        pauseButton = $(R.id.song_button_pause);
+        pauseButton.setOnClickListener(listener);
+        downloadButton = $(R.id.song_button_download);
+        RequestPermission.getInstance(this).bindViewPermission(downloadButton, listener, listener, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        downloadButton.setOnClickListener(listener);
         seekBar = $(R.id.song_progress);
         seekBar.setOnSeekBarChangeListener(listener);
         refreshState();
@@ -91,12 +99,21 @@ public class SongActivity extends HaruueActivity {
             titleView.setText(CurrentPlay.instance.data.songName);
             singerView.setText(CurrentPlay.instance.data.singerName);
             setPlayButtonState(MusicPlayServiceConnection.getMediaPlayer().isPlaying());
+            if (LocalUtils.isLocal(CurrentPlay.instance.data)) {
+                downloadButton.setVisibility(View.GONE);
+            } else {
+                downloadButton.setVisibility(View.VISIBLE);
+            }
             seekBar.setMax(MusicPlayServiceConnection.getMediaPlayer().getDuration());
             ThreadUtils.runOnNewThread(this, new Runnable() {
                 @Override
                 public void run() {
                     if (MusicPlayServiceConnection.getMediaPlayer() != null) {
-                        seekBar.setProgress(MusicPlayServiceConnection.getMediaPlayer().getCurrentPosition());
+                        try {
+                            seekBar.setProgress(MusicPlayServiceConnection.getMediaPlayer().getCurrentPosition());
+                        } catch (Exception e) {
+                            StandardUtils.printStack(e);
+                        }
                         handler.postDelayed(this, 1000);
                     }
                 }
@@ -154,7 +171,7 @@ public class SongActivity extends HaruueActivity {
         });
     }
 
-    class Listener implements View.OnClickListener, MusicPlayerController.OnCurrentPlayMusicChangeListener, SeekBar.OnSeekBarChangeListener {
+    class Listener implements View.OnClickListener, MusicPlayerController.OnCurrentPlayMusicChangeListener, SeekBar.OnSeekBarChangeListener, RequestPermission.OnPermissionDeniedListener {
 
         @Override
         public void onClick(View v) {
@@ -174,6 +191,8 @@ public class SongActivity extends HaruueActivity {
                 case R.id.song_button_previous:
                     MusicPlayerController.previous();
                     break;
+                case R.id.song_button_download:
+                    DownloadService.start(SongActivity.this, CurrentPlay.instance.data, "/sdcard/Music/" + CurrentPlay.instance.data.songName + ".mp3");
             }
         }
 
@@ -206,6 +225,11 @@ public class SongActivity extends HaruueActivity {
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
 
+        }
+
+        @Override
+        public void onPermissionDenied(String[] permissions) {
+            StandardUtils.toast(R.string.permission_denied_exception);
         }
     }
 

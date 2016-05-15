@@ -9,6 +9,7 @@ import cn.com.caoyue.imageloader.ImageLoader;
 import cn.com.caoyue.util.time.Time;
 import moe.haruue.redrockexam.musicplayer.R;
 import moe.haruue.redrockexam.musicplayer.data.model.SongModel;
+import moe.haruue.redrockexam.musicplayer.util.LocalUtils;
 import moe.haruue.redrockexam.ui.recyclerview.HaruueAdapter;
 import moe.haruue.redrockexam.ui.recyclerview.HaruueViewHolder;
 import moe.haruue.redrockexam.ui.widget.CircleImageView;
@@ -85,12 +86,10 @@ public class SongItemAdapter extends HaruueAdapter<SongModel> {
         }
 
         private void setSign(SongModel data) {
-            if (data.file != null && !data.file.isEmpty() && !data.file.equals("null")) {
+            if (LocalUtils.isLocal(data)) {
                 setMP3Sign();
-            } else if (data.m4aCache != null && !data.m4aCache.isEmpty() && !data.m4aUrl.equals("null")) {
-                setM4ASign();
             } else {
-                clearQualitySign();
+                setM4ASign();
             }
         }
 

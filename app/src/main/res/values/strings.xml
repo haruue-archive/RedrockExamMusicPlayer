@@ -7,7 +7,7 @@
     <string name="exit">退出</string>
     <string name="empty">这里空空如也</string>
     <string name="load_error">加载错误，请重试</string>
-    <string name="network_error">无法连接到网络</string>
+    <string name="network_error">网络异常</string>
     <string name="json_decode_exception">服务器返回无法解析的数据，请稍后再试</string>
     <string name="internet_traffic_save">省流</string>
     <string name="low_quality">低品音质</string>
@@ -23,4 +23,11 @@
     <string name="load_error_listen_other">加载错误，听听其他歌曲先吧</string>
     <string name="playing">正在播放</string>
     <string name="downloading">正在下载</string>
+    <string name="network">网络</string>
+    <string name="local">本地</string>
+    <string name="in_stream_null">无效的下载链接</string>
+    <string name="file_system_error">文件系统错误</string>
+    <string name="download_complete">下载完成</string>
+    <string name="download_failure">下载失败</string>
+    <string name="unknow_exception">未知异常</string>
 </resources>
