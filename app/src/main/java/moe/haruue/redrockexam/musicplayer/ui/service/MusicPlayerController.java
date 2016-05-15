@@ -2,6 +2,7 @@ package moe.haruue.redrockexam.musicplayer.ui.service;
 
 import android.media.MediaPlayer;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import moe.haruue.redrockexam.musicplayer.R;
@@ -22,7 +23,8 @@ public class MusicPlayerController {
             return;
         }
         if (CurrentPlay.instance.data != null) {
-            play(CurrentPlay.instance.data);
+            MusicPlayServiceConnection.getMediaPlayer().start();
+            notifyCurrentPlayMusicChange();
         } else {
             if (CurrentPlayList.hasList()) {
                 play(CurrentPlayList.random());
@@ -32,11 +34,20 @@ public class MusicPlayerController {
         }
     }
 
+    public static void pause() {
+        if (!MusicPlayServiceConnection.getMediaPlayer().isPlaying()) {
+            return;
+        }
+        MusicPlayServiceConnection.getMediaPlayer().pause();
+        notifyCurrentPlayMusicChange();
+    }
+
     public static void stop() {
         if (!MusicPlayServiceConnection.getMediaPlayer().isPlaying()) {
             return;
         }
         MusicPlayServiceConnection.getMediaPlayer().stop();
+        notifyCurrentPlayMusicChange();
     }
 
     public static void seekTo(int msec) {
@@ -45,23 +56,33 @@ public class MusicPlayerController {
 
     public static void play(SongModel song) {
         try {
-            if (song.file != null && !song.file.isEmpty()) {
+            StandardUtils.log("song.file: " + song.file);
+            StandardUtils.log("song.m4aCache: " + song.m4aCache);
+            StandardUtils.log("song.m4aUrl: " + song.m4aUrl);
+            if (CurrentPlay.instance.data != null) {
+                if (CurrentPlay.instance.data.equals(song)) {
+                    MusicPlayServiceConnection.getMediaPlayer().reset();
+                    MusicPlayServiceConnection.getMediaPlayer().start();
+                    return;
+                } else {
+                    MusicPlayServiceConnection.getMediaPlayer().stop();
+                    MusicPlayServiceConnection.getMediaPlayer().reset();
+                }
+            }
+            if (song.file != null && !song.file.isEmpty() && new File(song.file).exists()) {
                 MusicPlayServiceConnection.getMediaPlayer().setDataSource(song.file);
-            } else if (song.m4aCache != null && !song.m4aCache.isEmpty()) {
+            } else if (song.m4aCache != null && !song.m4aCache.isEmpty() && new File(song.m4aCache).exists()) {
                 MusicPlayServiceConnection.getMediaPlayer().setDataSource(song.m4aCache);
             } else {
                 MusicPlayServiceConnection.getMediaPlayer().setDataSource(song.m4aUrl);
             }
+            MusicPlayServiceConnection.getMediaPlayer().setOnCompletionListener(listener);
             MusicPlayServiceConnection.getMediaPlayer().setOnPreparedListener(listener);
             MusicPlayServiceConnection.getMediaPlayer().prepareAsync();
             CurrentPlay.instance.data = song;
-            notifyCurrentPlayMusicChange();
         } catch (Exception e) {
             StandardUtils.printStack(e);
             StandardUtils.toast(R.string.load_error_listen_other);
-            if (CurrentPlayList.hasList()) {
-                play(CurrentPlayList.random());
-            }
         }
     }
 
@@ -116,7 +137,7 @@ public class MusicPlayerController {
 
         @Override
         public void onCompletion(MediaPlayer mp) {
-            if (CurrentPlayList.instance.playList == null) {
+            if (CurrentPlayList.instance.playList == null || CurrentPlayList.instance.playList.isEmpty()) {
                 return;
             }
             if (CurrentPlayList.instance.mode == CurrentPlayList.PlayMode.ORDER_LIST || CurrentPlayList.instance.mode == CurrentPlayList.PlayMode.RANDOM) {
@@ -131,6 +152,7 @@ public class MusicPlayerController {
         @Override
         public void onPrepared(MediaPlayer mp) {
             mp.start();
+            notifyCurrentPlayMusicChange();
         }
 
     }

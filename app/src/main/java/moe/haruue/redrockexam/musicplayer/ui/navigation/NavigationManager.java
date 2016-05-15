@@ -1,6 +1,7 @@
 package moe.haruue.redrockexam.musicplayer.ui.navigation;
 
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.IdRes;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -11,7 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import cn.com.caoyue.imageloader.ImageLoader;
+import cn.com.caoyue.imageloader.ImageLoaderListener;
 import moe.haruue.redrockexam.musicplayer.R;
+import moe.haruue.redrockexam.musicplayer.data.storage.CurrentBitmap;
 import moe.haruue.redrockexam.musicplayer.data.storage.CurrentPlay;
 import moe.haruue.redrockexam.musicplayer.ui.activity.MainActivity;
 import moe.haruue.redrockexam.musicplayer.ui.activity.SearchActivity;
@@ -47,7 +50,7 @@ public class NavigationManager {
         MusicPlayerController.addToCurrentPlayMusicListeners(listener);
     }
 
-    public class Listener implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, MusicPlayerController.OnCurrentPlayMusicChangeListener {
+    public class Listener implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, MusicPlayerController.OnCurrentPlayMusicChangeListener, ImageLoaderListener {
 
         @Override
         public boolean onNavigationItemSelected(MenuItem item) {
@@ -85,12 +88,16 @@ public class NavigationManager {
                 case R.id.navigation_header_container_song_album_picture:
                     break;
                 case R.id.navigation_header_container_button_previous:
+                    MusicPlayerController.previous();
                     break;
                 case R.id.navigation_header_container_button_play:
+                    MusicPlayerController.play();
                     break;
                 case R.id.navigation_header_container_button_pause:
+                    MusicPlayerController.pause();
                     break;
                 case R.id.navigation_header_container_button_next:
+                    MusicPlayerController.next();
                     break;
             }
 
@@ -99,6 +106,23 @@ public class NavigationManager {
         @Override
         public void onCurrentPlayMusicChange() {
             refreshHeader();
+        }
+
+        @Override
+        public void onImageLoadSuccess(String url) {
+            songAlbumPictureImageView.setDrawingCacheEnabled(true);
+            CurrentBitmap.bitmap = ((BitmapDrawable) songAlbumPictureImageView.getDrawable()).getBitmap();
+            songAlbumPictureImageView.setDrawingCacheEnabled(false);
+        }
+
+        @Override
+        public void onImageLoadFailure(String url, Throwable t) {
+
+        }
+
+        @Override
+        public void onImageLoadCancel(String url) {
+
         }
     }
 
@@ -128,7 +152,7 @@ public class NavigationManager {
     public void refreshHeader() {
         if (CurrentPlay.instance.data != null) {
             songTitleTextView.setText(CurrentPlay.instance.data.songName);
-            ImageLoader.getInstance().loadImage(CurrentPlay.instance.data.albumPicSmall, songAlbumPictureImageView);
+            ImageLoader.getInstance().loadImage(CurrentPlay.instance.data.albumPicSmall, songAlbumPictureImageView, listener);
             setPlayButtonStatus(MusicPlayServiceConnection.getMediaPlayer().isPlaying());
         } else {
             songTitleTextView.setText(R.string.app_name);

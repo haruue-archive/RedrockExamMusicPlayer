@@ -85,9 +85,9 @@ public class SongItemAdapter extends HaruueAdapter<SongModel> {
         }
 
         private void setSign(SongModel data) {
-            if (data.file != null && !data.file.isEmpty()) {
+            if (data.file != null && !data.file.isEmpty() && !data.file.equals("null")) {
                 setMP3Sign();
-            } else if (data.m4aCache != null && !data.m4aCache.isEmpty()) {
+            } else if (data.m4aCache != null && !data.m4aCache.isEmpty() && !data.m4aUrl.equals("null")) {
                 setM4ASign();
             } else {
                 clearQualitySign();

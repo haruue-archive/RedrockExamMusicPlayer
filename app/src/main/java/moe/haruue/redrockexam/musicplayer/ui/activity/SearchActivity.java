@@ -180,6 +180,15 @@ public class SearchActivity extends HaruueActivity {
         MusicPlayService.unbind(this);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     public static void start(Context context) {
         Intent starter = new Intent(context, SearchActivity.class);
         context.startActivity(starter);

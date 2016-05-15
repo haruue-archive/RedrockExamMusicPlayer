@@ -38,7 +38,7 @@ public class MusicDatabaseHelper {
                             model.singerId = cursor.getInt(cursor.getColumnIndex("singerid"));
                             model.singerName = cursor.getString(cursor.getColumnIndex("singername"));
                             model.albumId = cursor.getInt(cursor.getColumnIndex("albumid"));
-                            model.albumName = cursor.getString(cursor.getColumnIndex("alnumname"));
+                            model.albumName = cursor.getString(cursor.getColumnIndex("albumname"));
                             model.albumPicBig = cursor.getString(cursor.getColumnIndex("albumpic_big"));
                             model.albumPicSmall = cursor.getString(cursor.getColumnIndex("albumpic_small"));
                             model.m4aUrl = cursor.getString(cursor.getColumnIndex("m4a"));
