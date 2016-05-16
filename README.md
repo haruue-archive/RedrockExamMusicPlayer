@@ -19,6 +19,10 @@
 ## 下载
 https://github.com/haruue/RedrockExamMusicPlayer/raw/master/app/app-release.apk
 
+### 额外的操作说明
++ 使用左边的抽屉切换 Activity
++ 在播放列表中长按项目来弹出删除和下载选项 
+
 ### 已实现功能（时间不够了我就直接拿要求改好了）
 #### **一、热门榜单**
 
@@ -41,7 +45,7 @@ https://github.com/haruue/RedrockExamMusicPlayer/raw/master/app/app-release.apk
 
 1. 当然得有常见的播放器操作 ( 显示当前播放、换歌、开始、暂停等 )
 2. 单曲循环、列表循环、随机播放
-3. 移除歌曲
+3. 移除歌曲（然而貌似需要重新进入 Activity 才能看到移除结果）
 4. 数据库存储    
 
 #### **五、歌曲播放**
